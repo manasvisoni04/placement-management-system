@@ -1,0 +1,126 @@
+<%- include('../partials/header') %>
+
+<div class="row mb-4">
+    <div class="col-md-8">
+        <h2>Student Dashboard</h2>
+        <p class="text-muted">Welcome back, <%= student.name %>. Here are your upcoming placement opportunities.</p>
+    </div>
+    <div class="col-md-4 text-md-end">
+        <div class="card bg-light border-0 d-inline-block px-4 py-2 mt-2 mt-md-0 shadow-sm">
+            <span class="text-muted d-block small">Your CGPA</span>
+            <span class="fs-4 fw-bold text-primary"><%= student.cgpa %></span>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <!-- Main Content: Drives -->
+    <div class="col-lg-8">
+        <h4 class="mb-3 fw-bold border-bottom pb-2">Available Placement Drives</h4>
+        
+        <% if (drives.length === 0) { %>
+            <div class="alert alert-info">No upcoming placement drives at the moment.</div>
+        <% } %>
+        
+        <% drives.forEach(d => { %>
+            <div class="card mb-4 border<%= d.isEligible ? '-primary' : '' %> <%= d.status === 'Closed' ? 'opacity-75' : '' %>">
+                <div class="card-header bg-white d-flex justify-content-between align-items-center">
+                    <h5 class="mb-0 fw-bold text-primary"><%= d.company_name %></h5>
+                    <% if (d.status === 'Closed') { %>
+                        <span class="badge bg-secondary">Closed</span>
+                    <% } else if (d.isEligible) { %>
+                        <span class="badge bg-success">Eligible</span>
+                    <% } else { %>
+                        <span class="badge bg-danger">Not Eligible</span>
+                    <% } %>
+                </div>
+                <div class="card-body">
+                    <div class="row mb-3">
+                        <div class="col-sm-6 mb-2 mb-sm-0">
+                            <strong>Job Role:</strong> <%= d.job_role %><br>
+                            <strong>Package:</strong> <span class="text-success fw-bold">₹ <%= d.package %></span>
+                        </div>
+                        <div class="col-sm-6 text-sm-end">
+                            <strong>Location:</strong> <%= d.location %><br>
+                            <strong>Deadline:</strong> <%= d.deadline %>
+                        </div>
+                    </div>
+
+                    <% if (d.timing !== 'TBD' || d.venue !== 'TBD') { %>
+                        <div class="row mb-3 bg-light p-2 rounded mx-0">
+                            <div class="col-sm-6">
+                                <strong><i class="bi bi-clock"></i> Timing:</strong> <%= d.timing %>
+                            </div>
+                            <div class="col-sm-6 text-sm-end">
+                                <strong><i class="bi bi-geo-alt"></i> Venue:</strong> <%= d.venue %>
+                            </div>
+                        </div>
+                    <% } %>
+
+                    <% if (d.rounds_of_procedure && d.rounds_of_procedure !== 'Not specified') { %>
+                        <div class="mb-3">
+                            <strong>Hiring Process:</strong>
+                            <p class="mb-0 small text-muted mt-1"><%= d.rounds_of_procedure %></p>
+                        </div>
+                    <% } %>
+                    
+                    <div class="mb-3">
+                        <strong>Required Skills:</strong>
+                        <% if (d.skills && d.skills.length > 0) { %>
+                            <div class="mt-1">
+                                <% d.skills.forEach(skill => { %>
+                                    <span class="badge bg-light text-dark border me-1"><%= skill %></span>
+                                <% }) %>
+                            </div>
+                        <% } else { %>
+                            <span class="text-muted small">Not specified</span>
+                        <% } %>
+                    </div>
+                    
+                    <div class="p-3 bg-light rounded d-flex justify-content-between align-items-center">
+                        <div>
+                            <span class="small text-muted d-block">Eligibility Logic:</span>
+                            <span>Requires <strong><%= d.eligibility_cgpa %> CGPA</strong> or above</span>
+                        </div>
+                        <% } else if (d.hasApplied) { %>
+                            <button class="btn btn-success btn-sm px-4" disabled><i class="bi bi-check-circle"></i> Applied</button>
+                        <% } else if (d.isEligible && d.status === 'Open') { %>
+                            <form action="/student/apply/<%= d.drive_id %>" method="POST" class="m-0 p-0">
+                                <button type="submit" class="btn btn-primary btn-sm px-4">Apply Now</button>
+                            </form>
+                        <% } else if (d.status === 'Open') { %>
+                            <button class="btn btn-outline-secondary btn-sm px-4" disabled>Not Eligible</button>
+                        <% } else { %>
+                            <button class="btn btn-secondary btn-sm px-4" disabled>Drive Closed</button>
+                        <% } %>
+                    </div>
+                </div>
+            </div>
+        <% }) %>
+    </div>
+    
+    <!-- Sidebar: Notifications -->
+    <div class="col-lg-4">
+        <h4 class="mb-3 fw-bold border-bottom pb-2">Latest Notifications</h4>
+        <div class="card border-0 shadow-sm sticky-top" style="top: 100px;">
+            <div class="card-body p-0">
+                <ul class="list-group list-group-flush rounded">
+                    <% if (notifications.length === 0) { %>
+                        <li class="list-group-item text-center py-4 text-muted">No updates available.</li>
+                    <% } %>
+                    <% notifications.forEach(n => { %>
+                        <li class="list-group-item py-3">
+                            <div class="d-flex w-100 justify-content-between mb-1">
+                                <h6 class="mb-0 text-dark fw-bold">Update</h6>
+                                <small class="text-muted"><%= n.date %></small>
+                            </div>
+                            <p class="mb-0 text-secondary"><%= n.message %></p>
+                        </li>
+                    <% }) %>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+
+<%- include('../partials/footer') %>

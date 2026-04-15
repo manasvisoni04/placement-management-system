@@ -1,0 +1,39 @@
+<%- include('../partials/header') %>
+
+<div class="auth-container">
+    <div class="card p-4">
+        <div class="auth-header">
+            <h2>Welcome Back</h2>
+            <p>Login to your account to continue</p>
+        </div>
+        
+        <form action="/auth/login" method="POST">
+            <div class="mb-3">
+                <label for="role" class="form-label">Login As</label>
+                <select class="form-select" id="role" name="role" required>
+                    <option value="" disabled selected>Select Role</option>
+                    <option value="student">Student</option>
+                    <option value="admin">Placement Coordinator (Admin)</option>
+                </select>
+            </div>
+            
+            <div class="mb-3">
+                <label for="email" class="form-label">Email Address</label>
+                <input type="email" class="form-control" id="email" name="email" placeholder="name@example.com" required>
+            </div>
+            
+            <div class="mb-4">
+                <label for="password" class="form-label">Password</label>
+                <input type="password" class="form-control" id="password" name="password" placeholder="••••••••" required>
+            </div>
+            
+            <button type="submit" class="btn btn-primary w-100 py-2">Sign In</button>
+        </form>
+        
+        <div class="text-center mt-4">
+            <p class="text-muted">Don't have a student account? <a href="/auth/register" class="text-decoration-none fw-bold">Register here</a></p>
+        </div>
+    </div>
+</div>
+
+<%- include('../partials/footer') %>
