@@ -74,4 +74,7 @@ Environment variables (`.env`) are not included for security reasons.
 
 ## 👩‍💻 Author
 
-* Manasvi
+* Manasvi Soni
+* Deeksha Minj
+* Mandavi Goswami
+* Tanu Anjana
